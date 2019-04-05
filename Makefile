@@ -1,0 +1,2 @@
+all: build test
+
