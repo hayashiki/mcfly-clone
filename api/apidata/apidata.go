@@ -5,6 +5,21 @@ type LoginReq struct {
 	Provider string `json:"provider" validate:"nonzero"`
 }
 
-type AipError struct {
+type ApiResponse struct {
+	Status string `json:"status"`
+}
+
+type ApiError struct {
 	Error string `json:"error"`
+}
+
+type ProjectReq struct {
+	Handle   string `json:"handle" validate:"nonzero"`
+	Provider string `json:"provider" validate:"nonzero"`
+}
+
+type ProjectResp struct {
+	Handle   string `json:"handle"`
+	Url      string `json:"url"`
+	Provider string `json:"provider"`
 }

@@ -12,7 +12,13 @@ type Responder struct {
 	Request *http.Request
 }
 
-func (r *Responder) RespondWithError(apiErr *apidata.AipError) {
+func (r *Responder) Respond(v interface{}) {
+	r.WriteCommonHeaders()
+	r.WriteSuccessHeaders()
+	r.WriteResponseData(v)
+}
+
+func (r *Responder) RespondWithError(apiErr *apidata.ApiError) {
 	r.WriteCommonHeaders()
 	r.WriteErrorHeaders()
 	r.WriteResponseData(apiErr)
@@ -26,9 +32,27 @@ func (r *Responder) WriteErrorHeaders() {
 	r.WriteHeader(http.StatusBadRequest)
 }
 
+func (r *Responder) WriteSuccessHeaders() {
+	r.WriteHeader(http.StatusOK)
+}
+
 func (r *Responder) WriteResponseData(v interface{}) {
 	b, err := json.Marshal(v)
 	if err != nil {
 	}
 	r.Write(b)
+}
+
+func (r *Responder) RespondWithServerError(err error) {
+	r.WriteCommonHeaders()
+	r.WriteErrorHeaders()
+	r.WriteResponseData(NewServerErr())
+}
+
+func (r *Responder) RespondWithSuccess() {
+	r.Respond(NewSuccessResponse())
+}
+
+func NewSuccessResponse() *apidata.ApiResponse {
+	return &apidata.ApiResponse{"success!!"}
 }
